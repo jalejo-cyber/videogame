@@ -9,7 +9,7 @@ const state = {
   energia: 50,
   mentidesCV: 0
 };
-
+let companyType = null;
 // ==========================
 // REFERÈNCIES DOM
 // ==========================
@@ -89,7 +89,7 @@ Ara hauràs de decidir què poses al CV.
 `;
 
   choicesEl.innerHTML = `
-    <button class="choice" onclick="renderCVScene()">
+    <button class="choice" onclick="renderCompanySelection()"
       Començar a preparar el CV →
     </button>
   `;
@@ -110,7 +110,46 @@ const skills = [
   { name: "Gestió d’estrès", lie: false },
   { name: "Programació en 7 llenguatges", lie: true }
 ];
+function renderCompanySelection() {
 
+  sceneNameEl.textContent = "Has aplicat a...";
+
+  textEl.textContent = `
+Abans de preparar el CV, recordes que has aplicat a:
+`;
+
+  choicesEl.innerHTML = "";
+
+  const corpBtn = document.createElement("button");
+  corpBtn.className = "choice";
+  corpBtn.textContent = "🏢 Corporació tradicional";
+  corpBtn.onclick = () => {
+    companyType = "corporacio";
+    renderCVScene();
+  };
+
+  const startupBtn = document.createElement("button");
+  startupBtn.className = "choice";
+  startupBtn.textContent = "🚀 Startup moderna";
+  startupBtn.onclick = () => {
+    companyType = "startup";
+    renderCVScene();
+  };
+
+  const ongBtn = document.createElement("button");
+  ongBtn.className = "choice";
+  ongBtn.textContent = "🧠 ONG social";
+  ongBtn.onclick = () => {
+    companyType = "ong";
+    renderCVScene();
+  };
+
+  choicesEl.appendChild(corpBtn);
+  choicesEl.appendChild(startupBtn);
+  choicesEl.appendChild(ongBtn);
+
+  renderHud();
+}
 function renderCVScene() {
 
   sceneNameEl.textContent = "Preparant el CV";
@@ -288,11 +327,32 @@ function showResult(message, positive) {
 
   sceneNameEl.textContent = "Resultat";
 
-  let score =
-    state.professionalitat * 0.4 +
-    state.confiança * 0.3 -
+let score = 0;
+
+if (companyType === "corporacio") {
+  score =
+    state.professionalitat * 0.5 +
+    state.confiança * 0.2 -
     state.estrès * 0.2 -
-    state.mentidesCV * 10;
+    state.mentidesCV * 15 -
+    state.olor * 0.3;
+}
+
+if (companyType === "startup") {
+  score =
+    state.confiança * 0.5 +
+    state.professionalitat * 0.2 -
+    state.estrès * 0.1 -
+    state.mentidesCV * 5;
+}
+
+if (companyType === "ong") {
+  score =
+    state.professionalitat * 0.3 +
+    state.confiança * 0.2 -
+    state.mentidesCV * 20 -
+    state.estrès * 0.1;
+}
 
   if (!positive) score -= 15;
 
