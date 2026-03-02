@@ -72,12 +72,12 @@ function renderHud() {
 let selectedSkills = [];
 
 const skills = [
-  { name: "Excel nivell avançat", lie: false, effect: () => state.professionalitat += 10 },
-  { name: "Treball en equip", lie: false, effect: () => state.confiança += 5 },
-  { name: "C2 anglès", lie: true, effect: () => { state.confiança += 8; state.mentidesCV += 1; } },
-  { name: "Lideratge d’equips de 20 persones", lie: true, effect: () => { state.professionalitat += 5; state.mentidesCV += 1; } },
-  { name: "Gestió d’estrès", lie: false, effect: () => state.estrès -= 5 },
-  { name: "Programació en 7 llenguatges", lie: true, effect: () => { state.professionalitat += 7; state.mentidesCV += 1; } }
+  { name: "Excel nivell avançat", lie: false },
+  { name: "Treball en equip", lie: false },
+  { name: "C2 anglès", lie: true },
+  { name: "Lideratge d’equips de 20 persones", lie: true },
+  { name: "Gestió d’estrès", lie: false },
+  { name: "Programació en 7 llenguatges", lie: true }
 ];
 
 function renderCVScene() {
@@ -87,21 +87,35 @@ function renderCVScene() {
   choicesEl.innerHTML = "";
 
   skills.forEach(skill => {
+
     const btn = document.createElement("button");
     btn.className = "choice";
     btn.textContent = skill.name;
 
+    // Si està seleccionada → marquem visualment
+    if (selectedSkills.includes(skill)) {
+      btn.style.border = "2px solid #42e6a4";
+      btn.style.background = "#1e3d32";
+    }
+
     btn.onclick = () => {
 
-      if (selectedSkills.includes(skill.name)) return;
+      if (selectedSkills.includes(skill)) return;
 
       if (selectedSkills.length >= 3) {
         alert("Només pots seleccionar 3 habilitats!");
         return;
       }
 
-      selectedSkills.push(skill.name);
-      skill.effect();
+      selectedSkills.push(skill);
+
+      // Aplicar efectes
+      if (skill.lie) {
+        state.mentidesCV += 1;
+        state.confiança += 5;
+      } else {
+        state.professionalitat += 5;
+      }
 
       renderCVScene();
       renderHud();
@@ -126,35 +140,33 @@ function goToInterview() {
 
   sceneNameEl.textContent = "Entrevista";
 
-  let text = "El reclutador revisa el teu CV amb atenció. ";
-
   choicesEl.innerHTML = "";
 
-  if (state.mentidesCV >= 2) {
+  // Busquem una mentida concreta seleccionada
+  const liedSkill = selectedSkills.find(skill => skill.lie);
 
-    text += "S'atura en una línia concreta i aixeca una cella.";
+  if (liedSkill) {
 
-    textEl.textContent = text + 
-      "\n\n“Veig que tens C2 d’anglès. Pots explicar-me aquesta experiència?”";
+    textEl.textContent =
+      `El reclutador revisa el teu CV.\n\n“Veig que tens: ${liedSkill.name}. Em pots explicar aquesta experiència?”`;
 
     const improviseBtn = document.createElement("button");
     improviseBtn.className = "choice";
-    improviseBtn.textContent = "Improvisar amb confiança 😅";
+    improviseBtn.textContent = "Improvisar resposta 😅";
     improviseBtn.onclick = () => {
 
-      state.confiança += 5;
       state.estrès += 15;
 
       if (Math.random() < 0.5) {
-        showResult("Et fa una pregunta en anglès. Et quedes en blanc.", false);
+        showResult("Et quedes en blanc. Silenci incòmode.", false);
       } else {
-        showResult("La improvisació funciona sorprenentment.", true);
+        showResult("La improvisació cola... de moment.", true);
       }
     };
 
     const admitBtn = document.createElement("button");
     admitBtn.className = "choice";
-    admitBtn.textContent = "Admetre que ho vas exagerar";
+    admitBtn.textContent = "Admetre que vas exagerar";
     admitBtn.onclick = () => {
       state.professionalitat += 5;
       state.confiança -= 5;
@@ -166,16 +178,14 @@ function goToInterview() {
 
   } else {
 
-    text += "Sembla satisfet amb el teu perfil.";
-
-    textEl.textContent = text;
+    textEl.textContent =
+      "El reclutador sembla satisfet amb el teu perfil.";
 
     const continueBtn = document.createElement("button");
     continueBtn.className = "choice";
     continueBtn.textContent = "Continuar l'entrevista";
-    continueBtn.onclick = () => {
+    continueBtn.onclick = () =>
       showResult("L'entrevista flueix amb normalitat.", true);
-    };
 
     choicesEl.appendChild(continueBtn);
   }
