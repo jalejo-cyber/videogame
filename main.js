@@ -139,13 +139,11 @@ function renderCVScene() {
       }
 
       selectedSkills.push(skill);
-
-      if (skill.lie) {
-        state.mentidesCV += 1;
-        state.confiança += 5;
-      } else {
-        state.professionalitat += 5;
-      }
+if (skill.lie) {
+  state.mentidesCV += 1;
+  state.confiança += 5;
+  state.estrès += 12; // 👈 tensió interna per mentir
+}
 
       renderCVScene();
       renderHud();
