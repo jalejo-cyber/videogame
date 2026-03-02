@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Procés de selecció — Prototype</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <h1>Procés de selecció</h1>
+      <div class="hud" id="hud"></div>
+    </header>
+
+    <section class="stage">
+      <div class="scene" id="sceneName">—</div>
+
+      <div class="characterWrap" id="characterWrap" aria-label="Personatge">
+        <!-- Capes del personatge -->
+        <img class="layer" id="layerBody" alt="Cos" />
+        <img class="layer" id="layerClothes" alt="Roba" />
+        <img class="layer" id="layerFace" alt="Cara" />
+        <img class="layer effect" id="layerEffect" alt="Efecte" />
+      </div>
+
+      <div class="dialogue">
+        <p id="text"></p>
+      </div>
+
+      <div class="choices" id="choices"></div>
+    </section>
+
+    <footer class="footer">
+      <button class="ghost" id="restartBtn" hidden>Tornar a començar</button>
+    </footer>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
