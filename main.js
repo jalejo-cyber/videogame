@@ -151,7 +151,7 @@ function renderCVScene() {
     const continueBtn = document.createElement("button");
     continueBtn.className = "choice";
     continueBtn.textContent = "Continuar →";
-    continueBtn.onclick = goToInterview;
+ continueBtn.onclick = renderBeforeInterviewScene;
     choicesEl.appendChild(continueBtn);
   }
 }
@@ -159,7 +159,60 @@ function renderCVScene() {
 // ==========================
 // ENTREVISTA
 // ==========================
+function renderBeforeInterviewScene() {
+
+  sceneNameEl.textContent = "Davant l'edifici";
+
+  textEl.textContent = `
+Ets davant l'edifici. Tens uns minuts abans d'entrar.
+
+Què fas?
+`;
+
+  choicesEl.innerHTML = "";
+
+  const smokeBtn = document.createElement("button");
+  smokeBtn.className = "choice";
+  smokeBtn.textContent = "🚬 Fumar un cigarret per relaxar-te";
+  smokeBtn.onclick = () => {
+    state.estrès -= 5;
+    state.olor += 40;
+    renderHud();
+    goToInterview();
+  };
+
+  const coffeeBtn = document.createElement("button");
+  coffeeBtn.className = "choice";
+  coffeeBtn.textContent = "☕ Fer un cafè ràpid";
+  coffeeBtn.onclick = () => {
+    state.energia += 10;
+    state.olor += 20;
+    state.estrès += 5;
+    renderHud();
+    goToInterview();
+  };
+
+  const breatheBtn = document.createElement("button");
+  breatheBtn.className = "choice";
+  breatheBtn.textContent = "🧘 Respirar profundament i concentrar-te";
+  breatheBtn.onclick = () => {
+    state.estrès -= 15;
+    state.confiança += 5;
+    renderHud();
+    goToInterview();
+  };
+
+  choicesEl.appendChild(smokeBtn);
+  choicesEl.appendChild(coffeeBtn);
+  choicesEl.appendChild(breatheBtn);
+
+  renderHud();
+}
 function goToInterview() {
+  if (state.olor >= 30) {
+  state.confiança -= 5;
+  state.professionalitat -= 5;
+}
 
   sceneNameEl.textContent = "Entrevista";
 
@@ -171,7 +224,13 @@ function goToInterview() {
   if (liedSkill) {
 
     textEl.textContent =
-      `El reclutador revisa el teu CV.\n\n“Veig que tens: ${liedSkill.name}. Em pots explicar aquesta experiència?”`;
+      let intro = "El reclutador revisa el teu CV.";
+
+if (state.olor >= 30) {
+  intro += " Fa una micro pausa estranya mentre respira.";
+}
+
+textEl.textContent = intro + "\n\n";\n\n“Veig que tens: ${liedSkill.name}. Em pots explicar aquesta experiència?”`;
 
     const improviseBtn = document.createElement("button");
     improviseBtn.className = "choice";
