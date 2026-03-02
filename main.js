@@ -37,9 +37,9 @@ function updateCharacterVisual() {
 
   // Roba segons professionalitat
   if (state.professionalitat > 60) {
-    clothesEl.style.background = "#1f3a93"; // blau més formal
+    clothesEl.style.background = "#1f3a93";
   } else if (state.professionalitat < 40) {
-    clothesEl.style.background = "#6b2c2c"; // més cutre
+    clothesEl.style.background = "#6b2c2c";
   } else {
     clothesEl.style.background = "#2c3e50";
   }
@@ -62,25 +62,13 @@ function renderHud() {
     <span class="pill">Professionalitat: ${state.professionalitat}</span>
     <span class="pill">Mentides CV: ${state.mentidesCV}</span>
   `;
-
   updateCharacterVisual();
 }
 
 // ==========================
-// CV - MINI JOC
+// PERFIL REAL
 // ==========================
-let selectedSkills = [];
-
-const skills = [
-  { name: "Excel nivell avançat", lie: false },
-  { name: "Treball en equip", lie: false },
-  { name: "C2 anglès", lie: true },
-  { name: "Lideratge d’equips de 20 persones", lie: true },
-  { name: "Gestió d’estrès", lie: false },
-  { name: "Programació en 7 llenguatges", lie: true }
-];
 function renderProfileScene() {
-
   sceneNameEl.textContent = "El teu perfil real";
 
   textEl.textContent = `
@@ -103,9 +91,25 @@ Ara hauràs de decidir què poses al CV.
 
   renderHud();
 }
+
+// ==========================
+// CV
+// ==========================
+let selectedSkills = [];
+
+const skills = [
+  { name: "Excel nivell avançat", lie: false },
+  { name: "Treball en equip", lie: false },
+  { name: "C2 anglès", lie: true },
+  { name: "Lideratge d’equips de 20 persones", lie: true },
+  { name: "Gestió d’estrès", lie: false },
+  { name: "Programació en 7 llenguatges", lie: true }
+];
+
 function renderCVScene() {
+
   sceneNameEl.textContent = "Preparant el CV";
-  textEl.textContent = `Selecciona 3 habilitats per incloure al teu CV (${selectedSkills.length}/3)`;
+  textEl.textContent = `Selecciona 3 habilitats (${selectedSkills.length}/3)`;
 
   choicesEl.innerHTML = "";
 
@@ -115,7 +119,6 @@ function renderCVScene() {
     btn.className = "choice";
     btn.textContent = skill.name;
 
-    // Si està seleccionada → marquem visualment
     if (selectedSkills.includes(skill)) {
       btn.style.border = "2px solid #42e6a4";
       btn.style.background = "#1e3d32";
@@ -132,7 +135,6 @@ function renderCVScene() {
 
       selectedSkills.push(skill);
 
-      // Aplicar efectes
       if (skill.lie) {
         state.mentidesCV += 1;
         state.confiança += 5;
@@ -151,13 +153,15 @@ function renderCVScene() {
     const continueBtn = document.createElement("button");
     continueBtn.className = "choice";
     continueBtn.textContent = "Continuar →";
- continueBtn.onclick = renderBeforeInterviewScene;
+    continueBtn.onclick = renderBeforeInterviewScene;
     choicesEl.appendChild(continueBtn);
   }
+
+  renderHud();
 }
 
 // ==========================
-// ENTREVISTA
+// ABANS ENTREVISTA
 // ==========================
 function renderBeforeInterviewScene() {
 
@@ -173,32 +177,29 @@ Què fas?
 
   const smokeBtn = document.createElement("button");
   smokeBtn.className = "choice";
-  smokeBtn.textContent = "🚬 Fumar un cigarret per relaxar-te";
+  smokeBtn.textContent = "🚬 Fumar";
   smokeBtn.onclick = () => {
     state.estrès -= 5;
     state.olor += 40;
-    renderHud();
     goToInterview();
   };
 
   const coffeeBtn = document.createElement("button");
   coffeeBtn.className = "choice";
-  coffeeBtn.textContent = "☕ Fer un cafè ràpid";
+  coffeeBtn.textContent = "☕ Cafè";
   coffeeBtn.onclick = () => {
     state.energia += 10;
     state.olor += 20;
     state.estrès += 5;
-    renderHud();
     goToInterview();
   };
 
   const breatheBtn = document.createElement("button");
   breatheBtn.className = "choice";
-  breatheBtn.textContent = "🧘 Respirar profundament i concentrar-te";
+  breatheBtn.textContent = "🧘 Respirar";
   breatheBtn.onclick = () => {
     state.estrès -= 15;
     state.confiança += 5;
-    renderHud();
     goToInterview();
   };
 
@@ -208,39 +209,42 @@ Què fas?
 
   renderHud();
 }
+
+// ==========================
+// ENTREVISTA
+// ==========================
 function goToInterview() {
+
   if (state.olor >= 30) {
-  state.confiança -= 5;
-  state.professionalitat -= 5;
-}
+    state.confiança -= 5;
+    state.professionalitat -= 5;
+  }
 
   sceneNameEl.textContent = "Entrevista";
-
   choicesEl.innerHTML = "";
 
-  // Busquem una mentida concreta seleccionada
   const liedSkill = selectedSkills.find(skill => skill.lie);
+
+  let intro = "El reclutador revisa el teu CV.";
+
+  if (state.olor >= 30) {
+    intro += " Fa una micro pausa estranya mentre respira.";
+  }
 
   if (liedSkill) {
 
     textEl.textContent =
-      let intro = "El reclutador revisa el teu CV.";
-
-if (state.olor >= 30) {
-  intro += " Fa una micro pausa estranya mentre respira.";
-}
-
-textEl.textContent = intro + "\n\n";\n\n“Veig que tens: ${liedSkill.name}. Em pots explicar aquesta experiència?”`;
+      intro + `\n\n“Veig que tens: ${liedSkill.name}. Em pots explicar aquesta experiència?”`;
 
     const improviseBtn = document.createElement("button");
     improviseBtn.className = "choice";
-    improviseBtn.textContent = "Improvisar resposta 😅";
+    improviseBtn.textContent = "Improvisar 😅";
     improviseBtn.onclick = () => {
 
       state.estrès += 15;
 
       if (Math.random() < 0.5) {
-        showResult("Et quedes en blanc. Silenci incòmode.", false);
+        showResult("Et quedes en blanc.", false);
       } else {
         showResult("La improvisació cola... de moment.", true);
       }
@@ -248,11 +252,11 @@ textEl.textContent = intro + "\n\n";\n\n“Veig que tens: ${liedSkill.name}. Em 
 
     const admitBtn = document.createElement("button");
     admitBtn.className = "choice";
-    admitBtn.textContent = "Admetre que vas exagerar";
+    admitBtn.textContent = "Admetre exageració";
     admitBtn.onclick = () => {
       state.professionalitat += 5;
       state.confiança -= 5;
-      showResult("Valora l’honestedat... però ho apunta.", true);
+      showResult("Valora l’honestedat.", true);
     };
 
     choicesEl.appendChild(improviseBtn);
@@ -260,12 +264,11 @@ textEl.textContent = intro + "\n\n";\n\n“Veig que tens: ${liedSkill.name}. Em 
 
   } else {
 
-    textEl.textContent =
-      "El reclutador sembla satisfet amb el teu perfil.";
+    textEl.textContent = intro + "\n\nSembla satisfet amb el teu perfil.";
 
     const continueBtn = document.createElement("button");
     continueBtn.className = "choice";
-    continueBtn.textContent = "Continuar l'entrevista";
+    continueBtn.textContent = "Continuar";
     continueBtn.onclick = () =>
       showResult("L'entrevista flueix amb normalitat.", true);
 
@@ -276,7 +279,7 @@ textEl.textContent = intro + "\n\n";\n\n“Veig que tens: ${liedSkill.name}. Em 
 }
 
 // ==========================
-// RESULTAT FINAL
+// RESULTAT
 // ==========================
 function showResult(message, positive) {
 
@@ -293,9 +296,9 @@ function showResult(message, positive) {
   textEl.textContent = message + "\n\n";
 
   if (score >= 40) {
-    textEl.textContent += "Et diuen que et contactaran aviat. (No sona malament...)";
+    textEl.textContent += "Et contactaran aviat.";
   } else {
-    textEl.textContent += "Rebràs un correu genèric en breu. Ja saps quin.";
+    textEl.textContent += "Rebràs un correu genèric.";
   }
 
   choicesEl.innerHTML = `
