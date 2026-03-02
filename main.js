@@ -28,11 +28,17 @@ const effectEl = document.getElementById("effect");
 // ==========================
 function updateCharacterVisual() {
 
+  const mouth = document.getElementById("mouth");
+  const aura = document.getElementById("aura");
+  const character = document.getElementById("characterWrap");
+
   // Cara segons estrès
   if (state.estrès > 60) {
-    faceEl.style.background = "#ffaaaa";
+    mouth.style.borderBottom = "3px solid red";
+    character.classList.add("nervous");
   } else {
-    faceEl.style.background = "#f2c9a0";
+    mouth.style.borderBottom = "3px solid black";
+    character.classList.remove("nervous");
   }
 
   // Roba segons professionalitat
@@ -44,14 +50,13 @@ function updateCharacterVisual() {
     clothesEl.style.background = "#2c3e50";
   }
 
-  // Efecte si hi ha moltes mentides
-  if (state.mentidesCV >= 2) {
-    effectEl.textContent = "😰";
+  // Aura si fa mala olor
+  if (state.olor >= 30) {
+    aura.style.opacity = "1";
   } else {
-    effectEl.textContent = "";
+    aura.style.opacity = "0";
   }
 }
-
 // ==========================
 // HUD
 // ==========================
