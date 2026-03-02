@@ -164,3 +164,52 @@ button.ghost{
   border-radius: 12px;
   cursor:pointer;
 }
+/* ===== PERSONATGE CSS TEMPORAL ===== */
+
+.characterWrap {
+  position: relative;
+  width: 220px;
+  height: 420px;
+  margin: 20px auto;
+}
+
+#body {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 250px;
+  background: #f2c9a0;
+  border-radius: 60px 60px 20px 20px;
+}
+
+#clothes {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 180px;
+  background: #2c3e50;
+  border-radius: 20px;
+}
+
+#face {
+  position: absolute;
+  bottom: 230px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 90px;
+  background: #f2c9a0;
+  border-radius: 50%;
+}
+
+#effect {
+  position: absolute;
+  bottom: 260px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+}
