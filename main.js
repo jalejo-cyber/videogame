@@ -105,22 +105,56 @@ function renderCVScene() {
 // SEGÜENT ESCENA (intro entrevista)
 // ==========================
 function goToInterviewIntro() {
-  sceneNameEl.textContent = "Dia de l'entrevista";
-  
-  let text = "Arribes a l'entrevista amb el teu CV imprès. ";
-  
-  if (state.mentidesCV >= 2) {
-    text += "Sents una veu interior que diu: 'Esperem que no preguntin massa...' 😅";
-    state.estrès += 10;
-  } else {
-    text += "Et sents relativament coherent amb el que has escrit.";
-    state.confiança += 5;
-  }
+  sceneNameEl.textContent = "Entrevista tècnica";
 
-  textEl.textContent = text;
-  choicesEl.innerHTML = `
-    <button class="choice" onclick="alert('Continuarà...')">Entrar a l'edifici</button>
-  `;
+  let text = "El reclutador revisa el teu CV amb atenció. ";
+
+  choicesEl.innerHTML = "";
+
+  // Si has mentit molt
+  if (state.mentidesCV >= 2) {
+    text += "S'atura en una línia concreta i aixeca una cella. ";
+
+    textEl.textContent = text + "“Veig que tens C2 d’anglès. Pots explicar-me aquesta experiència?”";
+
+    const truthBtn = document.createElement("button");
+    truthBtn.className = "choice";
+    truthBtn.textContent = "Intentar improvisar amb confiança 😅";
+    truthBtn.onclick = () => {
+      state.confiança += 5;
+      state.estrès += 15;
+
+      // 50% probabilitat que et descobreixi
+      if (Math.random() < 0.5) {
+        showResult("Et fa una pregunta en anglès fluid. Et quedes en blanc. Silenci incòmode.", false);
+      } else {
+        showResult("Sorprenentment, la improvisació funciona. No sap si realment tens C2.", true);
+      }
+    };
+
+    const admitBtn = document.createElement("button");
+    admitBtn.className = "choice";
+    admitBtn.textContent = "Admetre que potser ho vas exagerar";
+    admitBtn.onclick = () => {
+      state.professionalitat += 5;
+      state.confiança -= 5;
+      showResult("Valora l’honestedat... però ho anota.", true);
+    };
+
+    choicesEl.appendChild(truthBtn);
+    choicesEl.appendChild(admitBtn);
+
+  } else {
+    text += "Sembla satisfet amb el teu perfil.";
+    textEl.textContent = text;
+
+    const continueBtn = document.createElement("button");
+    continueBtn.className = "choice";
+    continueBtn.textContent = "Continuar l'entrevista";
+    continueBtn.onclick = () => showResult("L'entrevista flueix amb normalitat.", true);
+
+    choicesEl.appendChild(continueBtn);
+  }
 
   renderHud();
 }
@@ -130,3 +164,29 @@ function goToInterviewIntro() {
 // ==========================
 renderHud();
 renderCVScene();
+
+function showResult(message, positive) {
+  sceneNameEl.textContent = "Resultat de l'entrevista";
+
+  let score =
+    state.professionalitat * 0.4 +
+    state.confiança * 0.3 -
+    state.estrès * 0.2 -
+    state.mentidesCV * 10;
+
+  if (!positive) score -= 15;
+
+  textEl.textContent = message + "\n\n";
+
+  if (score >= 40) {
+    textEl.textContent += "Et diuen que et contactaran aviat. (No sona malament...)";
+  } else {
+    textEl.textContent += "Rebràs un correu genèric en breu. Ja saps quin.";
+  }
+
+  choicesEl.innerHTML = `
+    <button class="choice" onclick="location.reload()">Tornar a començar</button>
+  `;
+
+  renderHud();
+}
