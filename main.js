@@ -1,3 +1,22 @@
+const bodyEl = document.getElementById("body");
+const clothesEl = document.getElementById("clothes");
+const faceEl = document.getElementById("face");
+const effectEl = document.getElementById("effect");
+function updateCharacterVisual() {
+  // Expressió segons estrès
+  if (state.estrès > 60) {
+    faceEl.style.background = "#ffaaaa";
+  } else {
+    faceEl.style.background = "#f2c9a0";
+  }
+
+  // Efecte mala olor
+  if (state.mentidesCV >= 2) {
+    effectEl.textContent = "😰";
+  } else {
+    effectEl.textContent = "";
+  }
+}
 // ==========================
 // ESTAT DEL JUGADOR
 // ==========================
@@ -29,6 +48,7 @@ function renderHud() {
     <span class="pill">Mentides CV: ${state.mentidesCV}</span>
   `;
 }
+updateCharacterVisual();
 
 // ==========================
 // ESCENES
