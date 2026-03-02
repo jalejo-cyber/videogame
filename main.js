@@ -33,7 +33,7 @@ function updateCharacterVisual() {
   const character = document.getElementById("characterWrap");
 
   // Cara segons estrès
-  if (state.estrès > 60) {
+  if (state.estrès > 50) {
     mouth.style.borderBottom = "3px solid red";
     character.classList.add("nervous");
   } else {
