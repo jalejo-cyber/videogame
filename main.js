@@ -79,7 +79,30 @@ const skills = [
   { name: "Gestió d’estrès", lie: false },
   { name: "Programació en 7 llenguatges", lie: true }
 ];
+function renderProfileScene() {
 
+  sceneNameEl.textContent = "El teu perfil real";
+
+  textEl.textContent = `
+Aquest és el teu perfil real:
+
+• Anglès: B1 funcional
+• Experiència laboral: 1 any
+• No has liderat equips grans
+• Excel: nivell mig
+• Saps programar en 1 llenguatge
+
+Ara hauràs de decidir què poses al CV.
+`;
+
+  choicesEl.innerHTML = `
+    <button class="choice" onclick="renderCVScene()">
+      Començar a preparar el CV →
+    </button>
+  `;
+
+  renderHud();
+}
 function renderCVScene() {
   sceneNameEl.textContent = "Preparant el CV";
   textEl.textContent = `Selecciona 3 habilitats per incloure al teu CV (${selectedSkills.length}/3)`;
@@ -227,4 +250,4 @@ function showResult(message, positive) {
 // INICI
 // ==========================
 renderHud();
-renderCVScene();
+renderProfileScene();
